@@ -5,10 +5,15 @@
 using namespace std;
 int g_array[100];
 int g_count = 0;
-HANDLE g_hMutex = NULL;
+CRITICAL_SECTION g_hCriticalSection;
 HANDLE hStdout;
 int Lid = 0;
 
+/// <summary>
+/// Первый поток
+/// </summary>
+/// <param name="pv"></param>
+/// <returns></returns>
 static DWORD WINAPI Kulagin(void* pv)
 {
 	int i = 0;
@@ -17,25 +22,30 @@ static DWORD WINAPI Kulagin(void* pv)
 	pos.X = 1;
 	while (i < 50)
 	{
-		WaitForSingleObject(g_hMutex, INFINITE);
+		::EnterCriticalSection(&g_hCriticalSection);
 		srand(time(NULL));
 		g_array[g_count] = rand() % 256;
 		pos.Y = i;
 		SetConsoleCursorPosition(hStdout, pos);
 		if (!sync)
 		{
-			cout << "Kulagin" << endl;
+			cout << "Kulagin" << endl;// Выводим фамилию в название столбца
 			sync++;
 		}
 		cout << g_array[g_count++];
 		Sleep(40);
 		i++;
-		ReleaseMutex(g_hMutex);
+		::LeaveCriticalSection(&g_hCriticalSection);
 	}
 	if (!Lid)
 		Lid = 1;
 	return 0;
 }
+/// <summary>
+/// Второй поток
+/// </summary>
+/// <param name="pv"></param>
+/// <returns></returns>
 static DWORD WINAPI Grigoriy(void* pv)
 {
 	int i = 0;
@@ -44,25 +54,30 @@ static DWORD WINAPI Grigoriy(void* pv)
 	pos.X = 18;
 	while (i < 50)
 	{
-		WaitForSingleObject(g_hMutex, INFINITE);
+		::EnterCriticalSection(&g_hCriticalSection);
 		srand(time(NULL));
 		g_array[g_count] = rand() % 1000;
 		pos.Y = i;
 		SetConsoleCursorPosition(hStdout, pos);
 		if (!sync)
 		{
-			cout << "Grigoriy" << endl;
+			cout << "Grigoriy" << endl; // Выводим имя в название второго столбца
 			sync++;
 		}
 		cout << g_array[g_count++];
 		Sleep(40);
 		i++;
-		ReleaseMutex(g_hMutex);
+		::LeaveCriticalSection(&g_hCriticalSection);
 	}
 	if (!Lid)
 		Lid = 2;
 	return 0;
 }
+/// <summary>
+/// Третий поток 
+/// </summary>
+/// <param name="pv"></param>
+/// <returns></returns>
 static DWORD WINAPI Vladimirovich(void* pv)
 {
 	int i = 0;
@@ -71,25 +86,30 @@ static DWORD WINAPI Vladimirovich(void* pv)
 	pos.X = 36;
 	while (i < 50)
 	{
-		WaitForSingleObject(g_hMutex, INFINITE);
+		::EnterCriticalSection(&g_hCriticalSection);
 		srand(time(NULL));
 		g_array[g_count] = rand() % 256;
 		pos.Y = i;
 		SetConsoleCursorPosition(hStdout, pos);
 		if (!sync)
 		{
-			cout << "Vladimirovich" << endl;
+			cout << "Vladimirovich" << endl; //Выводим отчество в название третьего столбца
 			sync++;
 		}
 		cout << g_array[g_count++];
 		Sleep(40);
 		i++;
-		ReleaseMutex(g_hMutex);
+		::LeaveCriticalSection(&g_hCriticalSection);
 	}
 	if (!Lid)
 		Lid = 3;
 	return 0;
 }
+/// <summary>
+/// Четвертый поток
+/// </summary>
+/// <param name="pv"></param>
+/// <returns></returns>
 static DWORD WINAPI Gruppa(void* pv)
 {
 	int i = 0;
@@ -98,20 +118,20 @@ static DWORD WINAPI Gruppa(void* pv)
 	pos.X = 54;
 	while (i < 50)
 	{
-		WaitForSingleObject(g_hMutex, INFINITE);
+		::EnterCriticalSection(&g_hCriticalSection);
 		srand(time(NULL));
 		g_array[g_count] = rand() % 256;
 		pos.Y = i;
 		SetConsoleCursorPosition(hStdout, pos);
 		if (!sync)
 		{
-			cout << "Gruppa" << endl;
+			cout << "Gruppa" << endl;//Выводим группу в название четвертого столбца 
 			sync++;
 		}
 		cout << g_array[g_count++];
 		Sleep(40);
 		i++;
-		ReleaseMutex(g_hMutex);
+		::LeaveCriticalSection(&g_hCriticalSection);
 	}
 	if (!Lid)
 		Lid = 4;
@@ -123,21 +143,21 @@ int main()
 	DWORD dw;
 	HANDLE hThreads[4];
 	hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
-	g_hMutex = CreateMutex(NULL, FALSE, NULL);
-
+	::InitializeCriticalSection(&g_hCriticalSection);
+	//Создание потоков 
 	hThreads[0] = ::CreateThread(NULL, 0, Kulagin, NULL, 0, &dw);
 	hThreads[1] = ::CreateThread(NULL, 0, Grigoriy, NULL, 0, &dw);
 	hThreads[2] = ::CreateThread(NULL, 0, Vladimirovich, NULL, 0, &dw);
 	hThreads[3] = ::CreateThread(NULL, 0, Gruppa, NULL, 0, &dw);
 
 	::WaitForMultipleObjects(4, hThreads, TRUE, INFINITE);
-
+	//Закрытие потоков
 	::CloseHandle(hThreads[0]);
 	::CloseHandle(hThreads[1]);
 	::CloseHandle(hThreads[2]);
 	::CloseHandle(hThreads[3]);
 
-	::CloseHandle(g_hMutex);
+	::DeleteCriticalSection(&g_hCriticalSection);
 	switch (Lid)
 	{
 	case 1: cout << "\n 1 thread finished first!\n"; break;
@@ -150,4 +170,5 @@ int main()
 	_getch();
 	return 0;
 }
+
 

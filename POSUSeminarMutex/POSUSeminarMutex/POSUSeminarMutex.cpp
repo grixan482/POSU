@@ -5,7 +5,7 @@
 using namespace std;
 int g_array[100];
 int g_count = 0;
-CRITICAL_SECTION g_hCriticalSection;
+HANDLE g_hMutex = NULL;
 HANDLE hStdout;
 int Lid = 0;
 
@@ -17,7 +17,7 @@ static DWORD WINAPI Kulagin(void* pv)
 	pos.X = 1;
 	while (i < 50)
 	{
-		::EnterCriticalSection(&g_hCriticalSection);
+		WaitForSingleObject(g_hMutex, INFINITE);
 		srand(time(NULL));
 		g_array[g_count] = rand() % 256;
 		pos.Y = i;
@@ -30,7 +30,7 @@ static DWORD WINAPI Kulagin(void* pv)
 		cout << g_array[g_count++];
 		Sleep(40);
 		i++;
-		::LeaveCriticalSection(&g_hCriticalSection);
+		ReleaseMutex(g_hMutex);
 	}
 	if (!Lid)
 		Lid = 1;
@@ -44,7 +44,7 @@ static DWORD WINAPI Grigoriy(void* pv)
 	pos.X = 18;
 	while (i < 50)
 	{
-		::EnterCriticalSection(&g_hCriticalSection);
+		WaitForSingleObject(g_hMutex, INFINITE);
 		srand(time(NULL));
 		g_array[g_count] = rand() % 1000;
 		pos.Y = i;
@@ -57,7 +57,7 @@ static DWORD WINAPI Grigoriy(void* pv)
 		cout << g_array[g_count++];
 		Sleep(40);
 		i++;
-		::LeaveCriticalSection(&g_hCriticalSection);
+		ReleaseMutex(g_hMutex);
 	}
 	if (!Lid)
 		Lid = 2;
@@ -71,7 +71,7 @@ static DWORD WINAPI Vladimirovich(void* pv)
 	pos.X = 36;
 	while (i < 50)
 	{
-		::EnterCriticalSection(&g_hCriticalSection);
+		WaitForSingleObject(g_hMutex, INFINITE);
 		srand(time(NULL));
 		g_array[g_count] = rand() % 256;
 		pos.Y = i;
@@ -84,7 +84,7 @@ static DWORD WINAPI Vladimirovich(void* pv)
 		cout << g_array[g_count++];
 		Sleep(40);
 		i++;
-		::LeaveCriticalSection(&g_hCriticalSection);
+		ReleaseMutex(g_hMutex);
 	}
 	if (!Lid)
 		Lid = 3;
@@ -98,7 +98,7 @@ static DWORD WINAPI Gruppa(void* pv)
 	pos.X = 54;
 	while (i < 50)
 	{
-		::EnterCriticalSection(&g_hCriticalSection);
+		WaitForSingleObject(g_hMutex, INFINITE);
 		srand(time(NULL));
 		g_array[g_count] = rand() % 256;
 		pos.Y = i;
@@ -111,7 +111,7 @@ static DWORD WINAPI Gruppa(void* pv)
 		cout << g_array[g_count++];
 		Sleep(40);
 		i++;
-		::LeaveCriticalSection(&g_hCriticalSection);
+		ReleaseMutex(g_hMutex);
 	}
 	if (!Lid)
 		Lid = 4;
@@ -123,7 +123,7 @@ int main()
 	DWORD dw;
 	HANDLE hThreads[4];
 	hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
-	::InitializeCriticalSection(&g_hCriticalSection);
+	g_hMutex = CreateMutex(NULL, FALSE, NULL);
 
 	hThreads[0] = ::CreateThread(NULL, 0, Kulagin, NULL, 0, &dw);
 	hThreads[1] = ::CreateThread(NULL, 0, Grigoriy, NULL, 0, &dw);
@@ -137,7 +137,7 @@ int main()
 	::CloseHandle(hThreads[2]);
 	::CloseHandle(hThreads[3]);
 
-	::DeleteCriticalSection(&g_hCriticalSection);
+	::CloseHandle(g_hMutex);
 	switch (Lid)
 	{
 	case 1: cout << "\n 1 thread finished first!\n"; break;

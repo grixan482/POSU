@@ -9,6 +9,11 @@ HANDLE g_hSemaphor = NULL;
 HANDLE hStdout;
 int Lid = 0;
 
+/// <summary>
+///Первый поток
+/// </summary>
+/// <param name="pv"></param>
+/// <returns></returns>
 static DWORD WINAPI Kulagin(void* pv)
 {
 	int i = 0;
@@ -24,7 +29,7 @@ static DWORD WINAPI Kulagin(void* pv)
 		SetConsoleCursorPosition(hStdout, pos);
 		if (!sync)
 		{
-			cout << "Kulagin" << endl;
+			cout << "Kulagin" << endl; // Выводим фамилию в название столбца
 			sync++;
 		}
 		cout << g_array[g_count++];
@@ -36,6 +41,12 @@ static DWORD WINAPI Kulagin(void* pv)
 		Lid = 1;
 	return 0;
 }
+
+/// <summary>
+/// Второй поток 
+/// </summary>
+/// <param name="pv"></param>
+/// <returns></returns>
 static DWORD WINAPI Grigoriy(void* pv)
 {
 	int i = 0;
@@ -51,7 +62,7 @@ static DWORD WINAPI Grigoriy(void* pv)
 		SetConsoleCursorPosition(hStdout, pos);
 		if (!sync)
 		{
-			cout << "Grigoriy" << endl;
+			cout << "Grigoriy" << endl; // Выводим имя в название второго столбца
 			sync++;
 		}
 		cout << g_array[g_count++];
@@ -63,6 +74,11 @@ static DWORD WINAPI Grigoriy(void* pv)
 		Lid = 2;
 	return 0;
 }
+/// <summary>
+/// Третий поток
+/// </summary>
+/// <param name="pv"></param>
+/// <returns></returns>
 static DWORD WINAPI Vladimirovich(void* pv)
 {
 	int i = 0;
@@ -78,7 +94,7 @@ static DWORD WINAPI Vladimirovich(void* pv)
 		SetConsoleCursorPosition(hStdout, pos);
 		if (!sync)
 		{
-			cout << "Vladimirovich" << endl;
+			cout << "Vladimirovich" << endl; //Выводим отчество в название третьего столбца
 			sync++;
 		}
 		cout << g_array[g_count++];
@@ -90,6 +106,11 @@ static DWORD WINAPI Vladimirovich(void* pv)
 		Lid = 3;
 	return 0;
 }
+/// <summary>
+/// Четвертый поток
+/// </summary>
+/// <param name="pv"></param>
+/// <returns></returns>
 static DWORD WINAPI Gruppa(void* pv)
 {
 	int i = 0;
@@ -105,7 +126,7 @@ static DWORD WINAPI Gruppa(void* pv)
 		SetConsoleCursorPosition(hStdout, pos);
 		if (!sync)
 		{
-			cout << "Gruppa" << endl;
+			cout << "Gruppa" << endl; //Выводим группу в название четвертого столбца 
 			sync++;
 		}
 		cout << g_array[g_count++];
@@ -123,7 +144,9 @@ int main()
 	DWORD dw;
 	HANDLE hThreads[4];
 	hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	//Создание семафора
 	g_hSemaphor = CreateSemaphore(NULL, 2, 1, NULL);
+	//Создание 4-х потоков
 	hThreads[0] = ::CreateThread(NULL, 0, Kulagin, NULL, 0, &dw);
 	hThreads[1] = ::CreateThread(NULL, 0, Grigoriy, NULL, 0, &dw);
 	hThreads[2] = ::CreateThread(NULL, 0, Vladimirovich, NULL, 0, &dw);
@@ -134,6 +157,7 @@ int main()
 	::CloseHandle(hThreads[2]);
 	::CloseHandle(hThreads[3]);
 	::CloseHandle(g_hSemaphor);
+	//Выводим какой поток финишировал первым 
 	switch (Lid)
 	{
 	case 1: cout << "\n 1 thread finished first!\n"; break;
