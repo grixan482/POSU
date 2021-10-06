@@ -1,20 +1,153 @@
-﻿// POSUSeminarMutex.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
-
+﻿#include <Windows.h>
+#include <conio.h>
+#include <ctime>
 #include <iostream>
+using namespace std;
+int g_array[100];
+int g_count = 0;
+CRITICAL_SECTION g_hCriticalSection;
+HANDLE hStdout;
+int Lid = 0;
+
+static DWORD WINAPI Kulagin(void* pv)
+{
+	int i = 0;
+	int sync = 0;
+	COORD pos;
+	pos.X = 1;
+	while (i < 50)
+	{
+		::EnterCriticalSection(&g_hCriticalSection);
+		srand(time(NULL));
+		g_array[g_count] = rand() % 256;
+		pos.Y = i;
+		SetConsoleCursorPosition(hStdout, pos);
+		if (!sync)
+		{
+			cout << "Kulagin" << endl;
+			sync++;
+		}
+		cout << g_array[g_count++];
+		Sleep(40);
+		i++;
+		::LeaveCriticalSection(&g_hCriticalSection);
+	}
+	if (!Lid)
+		Lid = 1;
+	return 0;
+}
+static DWORD WINAPI Grigoriy(void* pv)
+{
+	int i = 0;
+	int sync = 0;
+	COORD pos;
+	pos.X = 18;
+	while (i < 50)
+	{
+		::EnterCriticalSection(&g_hCriticalSection);
+		srand(time(NULL));
+		g_array[g_count] = rand() % 1000;
+		pos.Y = i;
+		SetConsoleCursorPosition(hStdout, pos);
+		if (!sync)
+		{
+			cout << "Grigoriy" << endl;
+			sync++;
+		}
+		cout << g_array[g_count++];
+		Sleep(40);
+		i++;
+		::LeaveCriticalSection(&g_hCriticalSection);
+	}
+	if (!Lid)
+		Lid = 2;
+	return 0;
+}
+static DWORD WINAPI Vladimirovich(void* pv)
+{
+	int i = 0;
+	int sync = 0;
+	COORD pos;
+	pos.X = 36;
+	while (i < 50)
+	{
+		::EnterCriticalSection(&g_hCriticalSection);
+		srand(time(NULL));
+		g_array[g_count] = rand() % 256;
+		pos.Y = i;
+		SetConsoleCursorPosition(hStdout, pos);
+		if (!sync)
+		{
+			cout << "Vladimirovich" << endl;
+			sync++;
+		}
+		cout << g_array[g_count++];
+		Sleep(40);
+		i++;
+		::LeaveCriticalSection(&g_hCriticalSection);
+	}
+	if (!Lid)
+		Lid = 3;
+	return 0;
+}
+static DWORD WINAPI Gruppa(void* pv)
+{
+	int i = 0;
+	int sync = 0;
+	COORD pos;
+	pos.X = 54;
+	while (i < 50)
+	{
+		::EnterCriticalSection(&g_hCriticalSection);
+		srand(time(NULL));
+		g_array[g_count] = rand() % 256;
+		pos.Y = i;
+		SetConsoleCursorPosition(hStdout, pos);
+		if (!sync)
+		{
+			cout << "Gruppa" << endl;
+			sync++;
+		}
+		cout << g_array[g_count++];
+		Sleep(40);
+		i++;
+		::LeaveCriticalSection(&g_hCriticalSection);
+	}
+	if (!Lid)
+		Lid = 4;
+	return 0;
+}
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	DWORD dw;
+	HANDLE hThreads[4];
+	hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	::InitializeCriticalSection(&g_hCriticalSection);
+
+	hThreads[0] = ::CreateThread(NULL, 0, Kulagin, NULL, 0, &dw);
+	hThreads[1] = ::CreateThread(NULL, 0, Grigoriy, NULL, 0, &dw);
+	hThreads[2] = ::CreateThread(NULL, 0, Vladimirovich, NULL, 0, &dw);
+	hThreads[3] = ::CreateThread(NULL, 0, Gruppa, NULL, 0, &dw);
+
+	::WaitForMultipleObjects(4, hThreads, TRUE, INFINITE);
+
+	::CloseHandle(hThreads[0]);
+	::CloseHandle(hThreads[1]);
+	::CloseHandle(hThreads[2]);
+	::CloseHandle(hThreads[3]);
+
+	::DeleteCriticalSection(&g_hCriticalSection);
+	switch (Lid)
+	{
+	case 1: cout << "\n 1 thread finished first!\n"; break;
+	case 2: cout << "\n 2 thread finished first!\n"; break;
+	case 3: cout << "\n 3 thread finished first!\n"; break;
+	case 4: cout << "\n 4 thread finished first!\n"; break;
+	default: break;
+	}
+	cout << endl << "Press Any Key...";
+	_getch();
+	return 0;
 }
 
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
-
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
