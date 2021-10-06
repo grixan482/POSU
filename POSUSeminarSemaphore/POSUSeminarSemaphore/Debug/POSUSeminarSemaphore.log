@@ -1,6 +1,6 @@
 ﻿  POSUSeminarSemaphore.cpp
-G:\Git\POSUSeminars\POSUSeminarSemaphore\POSUSeminarSemaphore\POSUSeminarSemaphore.cpp(19,13): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
-G:\Git\POSUSeminars\POSUSeminarSemaphore\POSUSeminarSemaphore\POSUSeminarSemaphore.cpp(46,13): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
-G:\Git\POSUSeminars\POSUSeminarSemaphore\POSUSeminarSemaphore\POSUSeminarSemaphore.cpp(73,13): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
-G:\Git\POSUSeminars\POSUSeminarSemaphore\POSUSeminarSemaphore\POSUSeminarSemaphore.cpp(100,13): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
-  POSUSeminarSemaphore.vcxproj -> G:\Git\POSUSeminars\POSUSeminarSemaphore\Debug\POSUSeminarSemaphore.exe
+C:\Users\GrKulagin\source\repos\POSU\POSUSeminarSemaphore\POSUSeminarSemaphore\POSUSeminarSemaphore.cpp(19,13): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+C:\Users\GrKulagin\source\repos\POSU\POSUSeminarSemaphore\POSUSeminarSemaphore\POSUSeminarSemaphore.cpp(46,13): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+C:\Users\GrKulagin\source\repos\POSU\POSUSeminarSemaphore\POSUSeminarSemaphore\POSUSeminarSemaphore.cpp(73,13): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+C:\Users\GrKulagin\source\repos\POSU\POSUSeminarSemaphore\POSUSeminarSemaphore\POSUSeminarSemaphore.cpp(100,13): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+  POSUSeminarSemaphore.vcxproj -> C:\Users\GrKulagin\source\repos\POSU\POSUSeminarSemaphore\Debug\POSUSeminarSemaphore.exe

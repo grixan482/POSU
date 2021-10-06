@@ -28,7 +28,7 @@ static DWORD WINAPI Kulagin(void* pv)
 			sync++;
 		}
 		cout << g_array[g_count++];
-		Sleep(125);
+		Sleep(100);
 		i++;
 		ReleaseSemaphore(g_hSemaphor, 1, NULL);
 	}
@@ -55,7 +55,7 @@ static DWORD WINAPI Grigoriy(void* pv)
 			sync++;
 		}
 		cout << g_array[g_count++];
-		Sleep(125);
+		Sleep(100);
 		i++;
 		ReleaseSemaphore(g_hSemaphor, 1, NULL);
 	}
@@ -82,7 +82,7 @@ static DWORD WINAPI Vladimirovich(void* pv)
 			sync++;
 		}
 		cout << g_array[g_count++];
-		Sleep(200);
+		Sleep(100);
 		i++;
 		ReleaseSemaphore(g_hSemaphor, 1, NULL);
 	}
@@ -109,7 +109,7 @@ static DWORD WINAPI Gruppa(void* pv)
 			sync++;
 		}
 		cout << g_array[g_count++];
-		Sleep(200);
+		Sleep(100);
 		i++;
 		ReleaseSemaphore(g_hSemaphor, 1, NULL);
 	}
@@ -123,7 +123,7 @@ int main()
 	DWORD dw;
 	HANDLE hThreads[4];
 	hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
-	g_hSemaphor = CreateSemaphore(NULL, 2, 4, NULL);
+	g_hSemaphor = CreateSemaphore(NULL, 2, 1, NULL);
 	hThreads[0] = ::CreateThread(NULL, 0, Kulagin, NULL, 0, &dw);
 	hThreads[1] = ::CreateThread(NULL, 0, Grigoriy, NULL, 0, &dw);
 	hThreads[2] = ::CreateThread(NULL, 0, Vladimirovich, NULL, 0, &dw);
