@@ -9,112 +9,135 @@ HANDLE g_hMutex = NULL;
 HANDLE hStdout;
 int Lid = 0;
 
+/// <summary>
+///Первый поток
+/// </summary>
+/// <param name="pv"></param>
+/// <returns></returns>
 static DWORD WINAPI Kulagin(void* pv)
 {
+	COORD pos;   //Переменная, которая будет хранить текующую координату курсора 
 	int i = 0;
 	int sync = 0;
-	COORD pos;
-	pos.X = 1;
+	pos.X = 1;  //Столбец отображения задержки первого потока
 	while (i < 50)
 	{
-		WaitForSingleObject(g_hMutex, INFINITE);
-		srand(time(NULL));
-		g_array[g_count] = rand() % 256;
+		WaitForSingleObject(g_hMutex, INFINITE); // Ожидание запуска мютекса на длительном интервале времени
+		srand(time(NULL)); //Включение генератора случайных чисел
+		g_array[g_count] = rand() % 256;  //Генерируем случайное число
 		pos.Y = i;
-		SetConsoleCursorPosition(hStdout, pos);
+		SetConsoleCursorPosition(hStdout, pos); //Установка курсора в i-ую строку
 		if (!sync)
 		{
-			cout << "Kulagin" << endl;
+			cout << "Kulagin" << endl;  // Выводим фамилию в название столбца
 			sync++;
 		}
 		cout << g_array[g_count++];
-		Sleep(40);
+		Sleep(40);  //Осуществление задержки на 40 миллисекунд
 		i++;
-		ReleaseMutex(g_hMutex);
+		ReleaseMutex(g_hMutex); //Освообождение мютекса
 	}
 	if (!Lid)
-		Lid = 1;
+		Lid = 1;  //Флаг лидирующего потока
 	return 0;
 }
+
+/// <summary>
+/// Второй поток 
+/// </summary>
+/// <param name="pv"></param>
+/// <returns></returns>
 static DWORD WINAPI Grigoriy(void* pv)
 {
+	COORD pos; //Переменная, которая будет хранить текующую координату курсора
 	int i = 0;
 	int sync = 0;
-	COORD pos;
-	pos.X = 18;
+	pos.X = 18;   //Столбец отображения задержки второго потока
 	while (i < 50)
 	{
-		WaitForSingleObject(g_hMutex, INFINITE);
-		srand(time(NULL));
-		g_array[g_count] = rand() % 1000;
+		WaitForSingleObject(g_hMutex, INFINITE); // Ожидание запуска мютекса на длительном интервале времени
+		srand(time(NULL));  //Включение генератора случайных чисел
+		g_array[g_count] = rand() % 256; //Генерируем случайное число
 		pos.Y = i;
-		SetConsoleCursorPosition(hStdout, pos);
+		SetConsoleCursorPosition(hStdout, pos); //Установка курсора в i-ую строку
 		if (!sync)
 		{
-			cout << "Grigoriy" << endl;
+			cout << "Grigoriy" << endl; // Выводим имя в название второго столбца
 			sync++;
 		}
 		cout << g_array[g_count++];
-		Sleep(40);
+		Sleep(40); //Осуществление задержки на 40 миллисекунд
 		i++;
-		ReleaseMutex(g_hMutex);
+		ReleaseMutex(g_hMutex);  //Освообождение мютекса
 	}
 	if (!Lid)
-		Lid = 2;
+		Lid = 2; //Флаг лидирующего потока
 	return 0;
 }
+
+/// <summary>
+/// Третий поток
+/// </summary>
+/// <param name="pv"></param>
+/// <returns></returns>
 static DWORD WINAPI Vladimirovich(void* pv)
 {
+	COORD pos;  //Переменная, которая будет хранить текующую координату курсора
 	int i = 0;
 	int sync = 0;
-	COORD pos;
-	pos.X = 36;
+	pos.X = 36;   //Столбец отображения задержки третьего потока
 	while (i < 50)
 	{
-		WaitForSingleObject(g_hMutex, INFINITE);
-		srand(time(NULL));
-		g_array[g_count] = rand() % 256;
+		WaitForSingleObject(g_hMutex, INFINITE); // Ожидание запуска мютекса на длительном интервале времени
+		srand(time(NULL)); //Включение генератора случайных чисел
+		g_array[g_count] = rand() % 256;  //Генерируем случайное число
 		pos.Y = i;
-		SetConsoleCursorPosition(hStdout, pos);
+		SetConsoleCursorPosition(hStdout, pos); //Установка курсора в i-ую строку
 		if (!sync)
 		{
-			cout << "Vladimirovich" << endl;
+			cout << "Vladimirovich" << endl; //Выводим отчество в название третьего столбца
 			sync++;
 		}
 		cout << g_array[g_count++];
-		Sleep(40);
+		Sleep(40); //Осуществление задержки на 40 миллисекунд
 		i++;
-		ReleaseMutex(g_hMutex);
+		ReleaseMutex(g_hMutex);  //Освообождение мютекса
 	}
 	if (!Lid)
-		Lid = 3;
+		Lid = 3;  //Флаг лидирующего потока
 	return 0;
 }
+
+/// <summary>
+/// Четвертый поток
+/// </summary>
+/// <param name="pv"></param>
+/// <returns></returns>
 static DWORD WINAPI Gruppa(void* pv)
 {
+	COORD pos; //Переменная, которая будет хранить текующую координату курсора
 	int i = 0;
 	int sync = 0;
-	COORD pos;
-	pos.X = 54;
+	pos.X = 54; //Столбец отображения задержки четвертого потока
 	while (i < 50)
 	{
-		WaitForSingleObject(g_hMutex, INFINITE);
-		srand(time(NULL));
-		g_array[g_count] = rand() % 256;
+		WaitForSingleObject(g_hMutex, INFINITE); // Ожидание запуска мютекса на длительном интервале времени
+		srand(time(NULL)); //Включение генератора случайных чисел
+		g_array[g_count] = rand() % 256; //Генерируем случайное число
 		pos.Y = i;
-		SetConsoleCursorPosition(hStdout, pos);
+		SetConsoleCursorPosition(hStdout, pos);//Установка курсора в i-ую строку
 		if (!sync)
 		{
-			cout << "Gruppa" << endl;
+			cout << "Gruppa" << endl; //Выводим группу в название четвертого столбца 
 			sync++;
 		}
 		cout << g_array[g_count++];
-		Sleep(40);
+		Sleep(40); //Осуществление задержки на 40 миллисекунд
 		i++;
-		ReleaseMutex(g_hMutex);
+		ReleaseMutex(g_hMutex); //Освообождение мютекса
 	}
 	if (!Lid)
-		Lid = 4;
+		Lid = 4; //Флаг лидирующего потока
 	return 0;
 }
 
@@ -123,8 +146,9 @@ int main()
 	DWORD dw;
 	HANDLE hThreads[4];
 	hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	//Создание мютекса
 	g_hMutex = CreateMutex(NULL, FALSE, NULL);
-
+	//Создание 4-х потоков 
 	hThreads[0] = ::CreateThread(NULL, 0, Kulagin, NULL, 0, &dw);
 	hThreads[1] = ::CreateThread(NULL, 0, Grigoriy, NULL, 0, &dw);
 	hThreads[2] = ::CreateThread(NULL, 0, Vladimirovich, NULL, 0, &dw);
@@ -136,8 +160,9 @@ int main()
 	::CloseHandle(hThreads[1]);
 	::CloseHandle(hThreads[2]);
 	::CloseHandle(hThreads[3]);
-
 	::CloseHandle(g_hMutex);
+
+	//Выводим какой поток финишировал первым 
 	switch (Lid)
 	{
 	case 1: cout << "\n 1 thread finished first!\n"; break;

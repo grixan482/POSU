@@ -16,29 +16,29 @@ int Lid = 0;
 /// <returns></returns>
 static DWORD WINAPI Kulagin(void* pv)
 {
+	COORD pos; //Переменная, которая будет хранить текующую координату курсора 
 	int i = 0;
 	int sync = 0;
 	while (i < 50)
 	{
-		WaitForSingleObject(&g_hSemaphor, INFINITE);
-		srand(time(NULL));
-		g_array[g_count] = rand() % 256;
-		COORD pos;
-		pos.X = 1;
+		WaitForSingleObject(&g_hSemaphor, INFINITE); // Ожидание запуска семафора на длительном интервале времени
+		srand(time(NULL)); //Включение генератора случайных чисел
+		g_array[g_count] = rand() % 256; //Генерируем случайное число
+		pos.X = 1;  //Столбец отображения задержки первого потока
 		pos.Y = i;
-		SetConsoleCursorPosition(hStdout, pos);
+		SetConsoleCursorPosition(hStdout, pos); //Установка курсора в i-ую строку
 		if (!sync)
 		{
 			cout << "Kulagin" << endl; // Выводим фамилию в название столбца
 			sync++;
 		}
 		cout << g_array[g_count++];
-		Sleep(100);
+		Sleep(100); //Осуществление задержки на 100 миллисекунд
 		i++;
-		ReleaseSemaphore(g_hSemaphor, 1, NULL);
+		::ReleaseSemaphore(g_hSemaphor, 1, NULL); //Освообождение семафора
 	}
 	if (!Lid)
-		Lid = 1;
+		Lid = 1;  //Флаг лидирующего потока
 	return 0;
 }
 
@@ -49,29 +49,29 @@ static DWORD WINAPI Kulagin(void* pv)
 /// <returns></returns>
 static DWORD WINAPI Grigoriy(void* pv)
 {
+	COORD pos;  //Переменная, которая будет хранить текующую координату курсора
 	int i = 0;
 	int sync = 0;
 	while (i < 50)
 	{
-		WaitForSingleObject(&g_hSemaphor, INFINITE);
-		srand(time(NULL));
-		g_array[g_count] = rand() % 1000;
-		COORD pos;
-		pos.X = 18;
+		WaitForSingleObject(&g_hSemaphor, INFINITE);  // Ожидание запуска семафора на длительном интервале времени
+		srand(time(NULL));  //Включение генератора случайных чисел
+		g_array[g_count] = rand() % 256; //Генерируем случайное число
+		pos.X = 18;   //Столбец отображения задержки второго потока
 		pos.Y = i;
-		SetConsoleCursorPosition(hStdout, pos);
+		SetConsoleCursorPosition(hStdout, pos); //Установка курсора в i-ую строку
 		if (!sync)
 		{
 			cout << "Grigoriy" << endl; // Выводим имя в название второго столбца
 			sync++;
 		}
 		cout << g_array[g_count++];
-		Sleep(100);
+		Sleep(100); //Осуществление задержки на 100 миллисекунд
 		i++;
-		ReleaseSemaphore(g_hSemaphor, 1, NULL);
+		::ReleaseSemaphore(g_hSemaphor, 1, NULL); //Освообождение семафора
 	}
 	if (!Lid)
-		Lid = 2;
+		Lid = 2; //Флаг лидирующего потока
 	return 0;
 }
 /// <summary>
@@ -83,27 +83,27 @@ static DWORD WINAPI Vladimirovich(void* pv)
 {
 	int i = 0;
 	int sync = 0;
+	COORD pos;  //Переменная, которая будет хранить текующую координату курсора
 	while (i < 50)
 	{
-		WaitForSingleObject(&g_hSemaphor, INFINITE);
-		srand(time(NULL));
-		g_array[g_count] = rand() % 256;
-		COORD pos;
-		pos.X = 36;
+		WaitForSingleObject(&g_hSemaphor, INFINITE);  // Ожидание запуска семафора на длительном интервале времени
+		srand(time(NULL));  //Включение генератора случайных чисел
+		g_array[g_count] = rand() % 256;  //Генерируем случайное число
+		pos.X = 36;   //Столбец отображения задержки третьего потока
 		pos.Y = i;
-		SetConsoleCursorPosition(hStdout, pos);
+		SetConsoleCursorPosition(hStdout, pos); //Установка курсора в i-ую строку
 		if (!sync)
 		{
 			cout << "Vladimirovich" << endl; //Выводим отчество в название третьего столбца
 			sync++;
 		}
 		cout << g_array[g_count++];
-		Sleep(100);
+		Sleep(100); //Осуществление задержки на 100 миллисекунд
 		i++;
-		ReleaseSemaphore(g_hSemaphor, 1, NULL);
+		::ReleaseSemaphore(g_hSemaphor, 1, NULL);  //Освообождение семафора
 	}
 	if (!Lid)
-		Lid = 3;
+		Lid = 3;  //Флаг лидирующего потока
 	return 0;
 }
 /// <summary>
@@ -113,29 +113,29 @@ static DWORD WINAPI Vladimirovich(void* pv)
 /// <returns></returns>
 static DWORD WINAPI Gruppa(void* pv)
 {
+	COORD pos; //Переменная, которая будет хранить текующую координату курсора
 	int i = 0;
 	int sync = 0;
 	while (i < 50)
 	{
-		WaitForSingleObject(&g_hSemaphor, INFINITE);
-		srand(time(NULL));
-		g_array[g_count] = rand() % 256;
-		COORD pos;
-		pos.X = 54;
+		WaitForSingleObject(&g_hSemaphor, INFINITE); // Ожидание запуска семафора на длительном интервале времени
+		srand(time(NULL)); //Включение генератора случайных чисел
+		g_array[g_count] = rand() % 256; //Генерируем случайное число
+		pos.X = 54; //Столбец отображения задержки четвертого потока
 		pos.Y = i;
-		SetConsoleCursorPosition(hStdout, pos);
+		SetConsoleCursorPosition(hStdout, pos); //Установка курсора в i-ую строку
 		if (!sync)
 		{
 			cout << "Gruppa" << endl; //Выводим группу в название четвертого столбца 
 			sync++;
 		}
 		cout << g_array[g_count++];
-		Sleep(100);
+		Sleep(100); //Осуществление задержки на 100 миллисекунд
 		i++;
-		ReleaseSemaphore(g_hSemaphor, 1, NULL);
+		::ReleaseSemaphore(g_hSemaphor, 1, NULL); //Освообождение семафора
 	}
 	if (!Lid)
-		Lid = 4;
+		Lid = 4; //Флаг лидирующего потока
 	return 0;
 }
 
@@ -151,6 +151,7 @@ int main()
 	hThreads[1] = ::CreateThread(NULL, 0, Grigoriy, NULL, 0, &dw);
 	hThreads[2] = ::CreateThread(NULL, 0, Vladimirovich, NULL, 0, &dw);
 	hThreads[3] = ::CreateThread(NULL, 0, Gruppa, NULL, 0, &dw);
+	
 	::WaitForMultipleObjects(4, hThreads, TRUE, INFINITE);
 	::CloseHandle(hThreads[0]);
 	::CloseHandle(hThreads[1]);
